@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-cosmic">
+<head>
+<meta charset="UTF-8">
+<title>The Lexicon Card Catalog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root{
+  --bg1:#0f0c29; --bg2:#1e1b4b;
+  --card: rgba(255, 255, 255, 0.04);
+  --card-solid: #181533;
+  --border: rgba(255, 255, 255, 0.1);
+  --red:#ff453a; --yellow:#ff9f0a; --green:#30d158;
+  --text:#ffffff; --muted:rgba(255, 255, 255, 0.55);
+  --amber:#ff9f0a;
+}
+
+/* Accent Themes */
+:root.theme-cosmic {
+  --pink:#ff6ec7;
+  --blue:#4cc9f0;
+  --purple:#9d4edd;
+}
+:root.theme-emerald {
+  --pink:#2ecc71;
+  --blue:#1abc9c;
+  --purple:#16a085;
+}
+:root.theme-sunset {
+  --pink:#e67e22;
+  --blue:#ffb84d;
+  --purple:#d35400;
+}
+:root.theme-ice {
+  --pink:#00cec9;
+  --blue:#0984e3;
+  --purple:#6c5ce7;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  color:var(--text);
+  font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:28px 16px 60px;
+  overflow-x:hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dynamic cross-fading background layer engines */
+#bg-glow-container {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: -2;
+  overflow: hidden;
+}
+.bg-base-style {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  transition: opacity 0.8s ease-in-out;
+}
+#bg-base {
+  opacity: 1;
+}
+#bg-transition {
+  opacity: 0;
+}
+
+/* Floating liquid morphing blobs */
+.blob {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  filter: blur(100px);
+  z-index: -1;
+  opacity: 0.22;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blob-1 {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  top: -10%;
+  left: -10%;
+  animation: liquidMorph1 25s infinite alternate ease-in-out;
+}
+.blob-2 {
+  background: linear-gradient(135deg, var(--blue), var(--pink));
+  bottom: -15%;
+  right: -10%;
+  animation: liquidMorph2 30s infinite alternate ease-in-out;
+}
+.blob-3 {
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  top: 35%;
+  left: 25%;
+  animation: liquidMorph3 28s infinite alternate ease-in-out;
+}
+
+@keyframes liquidMorph1 {
+  0% {
+    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%;
+    transform: translate(100px, 80px) scale(1.2) rotate(180deg);
+  }
+  100% {
+    border-radius: 35% 65% 30% 70% / 50% 30% 70% 50%;
+    transform: translate(-50px, 120px) scale(0.9) rotate(360deg);
+  }
+}
+@keyframes liquidMorph2 {
+  0% {
+    border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    border-radius: 30% 70% 70% 30% / 50% 30% 70% 50%;
+    transform: translate(-120px, -60px) scale(0.8) rotate(-180deg);
+  }
+  100% {
+    border-radius: 60% 40% 45% 55% / 40% 60% 40% 60%;
+    transform: translate(80px, -100px) scale(1.1) rotate(-360deg);
+  }
+}
+@keyframes liquidMorph3 {
+  0% {
+    border-radius: 38% 62% 40% 60% / 40% 40% 60% 60%;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    border-radius: 65% 35% 62% 38% / 55% 45% 55% 45%;
+    transform: translate(-60px, 50px) scale(1.2) rotate(90deg);
+  }
+  100% {
+    border-radius: 45% 55% 48% 52% / 48% 52% 48% 52%;
+    transform: translate(60px, -50px) scale(0.95) rotate(180deg);
+  }
+}
+
+.wrap{max-width:640px; width:100%;}
+
+header{
+  text-align:center;
+  margin-bottom:18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom:14px;
+}
+.eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  font-weight: 700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--blue);
+}
+h1{
+  font-size:32px;
+  font-weight:800;
+  margin:6px 0 2px;
+  letter-spacing:-0.5px;
+  background:linear-gradient(90deg, var(--pink), var(--blue));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.sub{
+  font-size:13px;
+  color:var(--muted);
+}
+
+.statbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  margin:16px 2px 10px;
+  color:var(--muted);
+  gap:10px;
+}
+.statbar .labels{display:flex; gap:14px; font-weight: 600;}
+.resetBtn{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color:#fff;
+  padding:5px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.resetBtn:hover{background: rgba(255, 255, 255, 0.16); transform: translateY(-1px);}
+.resetBtn:active{transform: scale(0.96);}
+
+.track{
+  height:10px;
+  background: rgba(255, 255, 255, 0.08);
+  border:1px solid rgba(255, 255, 255, 0.05);
+  border-radius:6px;
+  overflow:hidden;
+  margin-bottom:24px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+.fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--pink), var(--blue));
+  width:0%;
+  transition:width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Modern Liquid Glass Card styling */
+.card{
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 28px 24px 22px;
+  position:relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card::before{
+  content:attr(data-tag);
+  position:absolute;
+  top:-12px; left:24px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color:#fff;
+  font-family:'JetBrains Mono', monospace;
+  font-size:9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing:2px;
+  padding:4px 10px;
+  border-radius:20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+.word{
+  font-size:32px;
+  font-weight:800;
+  margin:10px 0 6px;
+  letter-spacing: -0.5px;
+}
+.prompt{
+  font-size:13.5px;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+
+/* Glass capsule options */
+.opt{
+  display:block;
+  width:100%;
+  text-align:left;
+  background: rgba(255, 255, 255, 0.04);
+  border:1px solid rgba(255, 255, 255, 0.08);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  font-size:14.5px;
+  line-height:1.45;
+  color:var(--text);
+  cursor:pointer;
+  transition:transform .2s cubic-bezier(0.16, 1, 0.3, 1), border-color .2s, background-color .2s;
+}
+.opt:hover:not(:disabled){
+  border-color: var(--blue);
+  background: rgba(255, 255, 255, 0.08);
+  transform:translateX(3px);
+}
+.opt:active:not(:disabled){
+  transform: scale(0.99) translateX(3px);
+}
+.opt:disabled{cursor:default;}
+.opt.correct{
+  background: rgba(48, 209, 88, 0.15);
+  border-color:var(--green);
+  color:#fff;
+  font-weight:600;
+  box-shadow: 0 0 15px rgba(48, 209, 88, 0.15);
+}
+.opt.wrong{
+  background: rgba(255, 69, 58, 0.15);
+  border-color:var(--red);
+  color:#fff;
+  box-shadow: 0 0 15px rgba(255, 69, 58, 0.15);
+}
+.opt.dim{opacity:0.35;}
+
+.feedback{
+  margin-top:14px;
+  padding:18px;
+  border-radius:14px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  animation:reveal .3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes reveal{from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);}}
+.feedback .tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:8px;
+  display:block;
+}
+.feedback.right .tag{color:var(--green);}
+.feedback.wrong .tag{color:var(--red);}
+.def{font-size:15px; margin:0 0 12px; line-height:1.5;}
+.def b{color:var(--blue);}
+.examples{list-style:none; padding:0; margin:0;}
+.examples li{
+  font-size:13.5px;
+  font-style:italic;
+  color:rgba(255, 255, 255, 0.75);
+  padding-left:14px;
+  border-left:2px solid var(--pink);
+  margin-bottom:8px;
+  line-height:1.4;
+}
+
+.next{
+  display:inline-block;
+  margin-top:16px;
+  background:#fff;
+  color:#000;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  font-weight: 700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  border:none;
+  padding:12px 24px;
+  border-radius:12px;
+  cursor:pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.next:hover{background: rgba(255, 255, 255, 0.9); transform: translateY(-1px);}
+.next:active{transform: scale(0.97);}
+
+.done{
+  text-align:center;
+  padding:24px 16px;
+}
+.done .big{
+  font-size:54px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom: 8px;
+}
+.done p{font-size:16px; margin:6px 0 24px; color: var(--muted);}
+.restart{
+  background:#fff;
+  color:#000;
+  border:none;
+  padding:12px 24px;
+  border-radius:12px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight: 700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.restart:hover{background: rgba(255, 255, 255, 0.9); transform: translateY(-1px);}
+.restart:active{transform: scale(0.97);}
+
+.missedlist{
+  text-align:left;
+  margin-top:28px;
+  font-size:13.5px;
+  max-height:250px;
+  overflow-y:auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top:18px;
+}
+.missedlist b{color:#fff; display: block; margin-bottom: 8px;}
+.missedlist span{font-family:'JetBrains Mono',monospace; color:var(--red); font-weight:700; font-size:14px;}
+
+/* ===== iOS Settings style Page Layout & Customize Options ===== */
+.settings-card {
+  margin-top: 32px;
+}
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.settings-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: #fff;
+}
+.settings-group {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 12px;
+}
+.settings-row:last-child {
+  border-bottom: none;
+}
+.settings-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+.ios-palette-picker {
+  display: flex;
+  gap: 8px;
+}
+.palette-option {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+  position: relative;
+}
+.palette-option:hover {
+  transform: scale(1.15);
+}
+.palette-option.active {
+  border-color: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+.ios-select {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'><path d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+.ios-select:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.ios-select option {
+  background: #181533;
+  color: #fff;
+}
+.ios-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.ios-switch input { opacity: 0; width: 0; height: 0; }
+.ios-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: .3s cubic-bezier(0.25, 1, 0.5, 1);
+  border-radius: 24px;
+}
+.ios-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px; width: 20px;
+  left: 2px; bottom: 2px;
+  background-color: white;
+  transition: .3s cubic-bezier(0.25, 1, 0.5, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+input:checked + .ios-slider { background-color: var(--green); }
+input:checked + .ios-slider:before { transform: translateX(20px); }
+
+footer{
+  text-align:center;
+  font-family:'JetBrains Mono', monospace;
+  font-size:10px;
+  color:var(--muted);
+  margin-top:28px;
+  letter-spacing:1px;
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient background cross-fading glows -->
+<div id="bg-glow-container">
+  <div id="bg-base" class="bg-base-style"></div>
+  <div id="bg-transition" class="bg-base-style"></div>
+</div>
+
+<!-- Animated morphing background blobs -->
+<div id="blob1" class="blob blob-1"></div>
+<div id="blob2" class="blob blob-2"></div>
+<div id="blob3" class="blob blob-3"></div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Field Guide · Retrieval Practice</div>
+    <h1>The Lexical Quiz</h1>
+    <div class="sub">86 entries. Synonyms designed to trap the imprecise. Nuance is the whole game.</div>
+  </header>
+
+  <div class="statbar">
+    <div class="labels">
+      <span id="progressLabel">Card 1 / 86</span>
+      <span id="scoreLabel">Score 0</span>
+    </div>
+    <button class="resetBtn" id="resetBtn">Reset progress</button>
+  </div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+
+  <div id="quizArea"></div>
+
+  <!-- Intuitive App Presentation Settings Card inside Content Stream -->
+  <div class="settings-card">
+    <div class="settings-header">
+      <span>⚙️</span>
+      <h3>Page Layout & Theme Settings</h3>
+    </div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <span class="settings-label">Accent Theme</span>
+        <div class="ios-palette-picker" id="palette-picker">
+          <button class="palette-option theme-cosmic" onclick="updateSettings('theme', 'cosmic')" title="Cosmic"></button>
+          <button class="palette-option theme-emerald" onclick="updateSettings('theme', 'emerald')" title="Emerald"></button>
+          <button class="palette-option theme-sunset" onclick="updateSettings('theme', 'sunset')" title="Sunset"></button>
+          <button class="palette-option theme-ice" onclick="updateSettings('theme', 'ice')" title="Ice"></button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">Canvas Backdrop</span>
+        <select id="bgSelect" class="ios-select" onchange="updateSettings('bg', this.value)">
+          <option value="linear-gradient(135deg, #1e1b4b, #0f0c29)">Classic Cosmic</option>
+          <option value="linear-gradient(135deg, #09090e, #140d24)">Obsidian Abyss</option>
+          <option value="linear-gradient(135deg, #081a1a, #030a0d)">Deep Teal</option>
+          <option value="linear-gradient(135deg, #1c0919, #09030e)">Velvet Crimson</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">Liquid Floating Blobs</span>
+        <label class="ios-switch">
+          <input type="checkbox" id="blob-switch" onchange="updateSettings('blobs', this.checked)">
+          <span class="ios-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <footer>SHUFFLED EACH SESSION · CLICK AN OPTION TO ANSWER</footer>
+</div>
+
+<script>
+const DATA = [
+{w:"Onus",tag:"word",e:"The <b>burden of responsibility or proof</b> resting on a particular person.",c:"The burden of responsibility or proof resting on someone",d:["A sudden burst of energy or initiative","A bonus payment awarded for good performance","The very beginning stage of a process"],
+ex:["The onus is on the prosecution to prove guilt beyond reasonable doubt.","Convincing the skeptical board fell on Josh alone, since the onus was his.","She felt the onus of leadership every time a decision went wrong."]},
+
+{w:"Lexicon",tag:"word",e:"The <b>vocabulary or word stock</b> belonging to a language, person, or field.",c:"The vocabulary or word stock of a language, person, or field",d:["A formal dictionary bound in leather","The grammatical rules governing sentence structure","A collection of ancient manuscripts"],
+ex:["Clinical psychology has its own lexicon, full of terms like affect and cognition.","His hip hop lexicon was as rich as his academic one.","Learning IOP meant absorbing an entirely new lexicon of workplace jargon."]},
+
+{w:"Promiscuous",tag:"word",e:"Having <b>casual, indiscriminate</b> relations or mixing, most often used of sexual behaviour but also of indiscriminate combination generally.",c:"Having numerous casual relationships or mixing indiscriminately",d:["Sexually inexperienced or reserved","Faithful within a single committed relationship","Overly cautious about intimacy"],
+ex:["The tabloids painted the celebrity as promiscuous, based on rumor alone.","Promiscuous data sharing between apps raised serious privacy concerns.","His promiscuous reading habits meant he never stuck to one genre."]},
+
+{w:"Monosyllabic",tag:"word",e:"Consisting of <b>only one syllable</b>; also used of a person giving brief, one-word answers.",c:"Consisting of only one syllable, or giving brief one-word answers",d:["Speaking in a flat, monotone voice","Repeating the same syllable rhythmically","Unable to pronounce certain sounds"],
+ex:["His monosyllabic replies of yeah and no signaled disinterest.","Words like cat, dog, and run are monosyllabic.","Under interrogation, the suspect became monosyllabic, offering nothing more."]},
+
+{w:"Unchaste",tag:"word",e:"<b>Not sexually virtuous or modest</b>; morally impure by traditional standards.",c:"Not sexually virtuous or modest; morally impure",d:["Lacking elegance in dress or manner","Dishonest in financial dealings","Unrestrained in emotional expression"],
+ex:["Victorian society condemned any woman suspected of unchaste behaviour.","The novel explores unchaste desires suppressed by rigid social codes.","He was accused of unchaste conduct that scandalized the parish."]},
+
+{w:"Insofar",tag:"word",e:"Used in the phrase <b>insofar as</b>, meaning to the extent that, limiting the scope of a claim.",c:"To the extent that, used to limit a statement's scope",d:["From this point onward in time","In spite of the fact that","As a direct result of"],
+ex:["Insofar as the data supports it, the theory holds.","He agreed to help, insofar as his schedule allowed.","The plan is sound insofar as funding remains available."]},
+
+{w:"Emporium",tag:"word",e:"A <b>large retail store</b> selling a wide variety of goods under one roof.",c:"A large retail store selling a wide variety of goods",d:["A grand public building for government ceremonies","A wholesale warehouse restricted to traders","An open-air market held periodically"],
+ex:["The fragrance emporium stocked everything from niche oud to designer staples.","Downtown's old emporium once sold furniture, fabric, and hardware together.","He wandered the sneaker emporium, hunting rare Bape releases."]},
+
+{w:"Subsection",tag:"word",e:"A <b>distinct division</b> within a larger section of a document.",c:"A distinct division within a larger section of a document",d:["A footnote clarifying a citation","An appendix attached at the document's end","A summary preceding the main text"],
+ex:["Clause three, subsection b, outlines the tenant's obligations.","The report's methodology subsection detailed the sampling procedure.","She flagged an error buried in a minor subsection of the contract."]},
+
+{w:"Plight",tag:"word",e:"A <b>dangerous or unfortunate situation</b>. Note: archaically it could also mean a solemn pledge, as in plight one's troth.",c:"A dangerous, difficult, or unfortunate situation",d:["A solemn formal promise or commitment","A brief pause during a journey","A minor inconvenience easily resolved"],
+ex:["The plight of refugees fleeing conflict drew international attention.","Farmers described their plight after the drought destroyed the harvest.","Her plight worsened when she lost both her job and her home."]},
+
+{w:"Conjecture",tag:"word",e:"An <b>opinion formed on incomplete evidence</b>; an educated guess.",c:"An opinion formed on incomplete information; a guess",d:["A proven mathematical theorem","A formal legal accusation","A binding verbal agreement"],
+ex:["Without hard evidence, the detective's theory remained pure conjecture.","Goldbach's conjecture has never been proven despite centuries of effort.","Media conjecture about the breakup was fueled by a single blurry photo."]},
+
+{w:"Proclivity",tag:"word",e:"A <b>natural tendency or inclination</b> toward something, often something negative.",c:"A natural tendency or inclination toward something, often negative",d:["A strict moral obligation to act","A sudden irresistible urge","An acquired skill through practice"],
+ex:["He has a proclivity for overanalyzing every social interaction.","Her proclivity toward risk made her a natural trader.","The report noted a worrying proclivity for dishonesty among repeat offenders."]},
+
+{w:"Ad hominem",tag:"concept",e:"A fallacy that <b>attacks the person</b> making an argument instead of engaging the argument itself.",c:"Attacking the person making an argument rather than the argument itself",d:["Arguing from a position of authority","Reasoning based on a single example","Presenting only two extreme options"],
+ex:["Instead of refuting her data, he launched an ad hominem attack on her credentials.","Calling your opponent stupid is an ad hominem, not a rebuttal.","The debate degenerated into ad hominem insults within minutes."]},
+
+{w:"Divulge",tag:"word",e:"To <b>reveal private or secret information</b>.",c:"To reveal private or secret information",d:["To politely decline a request","To gradually forget something over time","To exaggerate details for effect"],
+ex:["She refused to divulge her source, even under pressure.","He divulged the company's financials only after signing an NDA.","Never divulge a client's diagnosis without explicit consent."]},
+
+{w:"Peripheral",tag:"word",e:"Of <b>minor importance</b>, or situated on the edge rather than the center.",c:"Of minor importance; situated on the edge rather than the center",d:["Central to the main argument or purpose","Occurring only rarely or intermittently","Hidden from ordinary view"],
+ex:["The typo was a peripheral issue compared to the report's flawed logic.","Peripheral vision lets you detect movement outside your direct line of sight.","He kept peripheral friendships going but reserved depth for a few."]},
+
+{w:"Propagate",tag:"word",e:"To <b>spread or transmit</b> something, whether ideas, plants, or physical waves.",c:"To spread or transmit something, such as ideas, plants, or waves",d:["To permanently destroy or eliminate","To gradually weaken over distance","To officially authorize or approve"],
+ex:["Misinformation can propagate across social media within hours.","Gardeners propagate succulents by rooting a single leaf.","Sound waves propagate more slowly in air than in water."]},
+
+{w:"Pseudoscience",tag:"concept",e:"A claim presented as scientific but <b>lacking rigorous methodology or evidence</b>.",c:"A claim presented as scientific but lacking rigorous methodology or evidence",d:["An early, unrefined stage of a legitimate science","A scientific theory that has since been disproven","Applied science used for practical invention"],
+ex:["Astrology is widely regarded as pseudoscience by the scientific community.","The supplement's claims relied on pseudoscience, not peer reviewed trials.","Distinguishing pseudoscience from genuine research requires checking falsifiability."]},
+
+{w:"Assimilation",tag:"concept",e:"The process of <b>absorbing and integrating</b> new information, culture, or people into an existing structure.",c:"The process of absorbing and integrating new information, culture, or people into an existing structure",d:["The rejection of foreign influence to preserve identity","The physical digestion of food into nutrients","A temporary phase before permanent separation"],
+ex:["Piaget described assimilation as fitting new experiences into existing schemas.","Immigrant assimilation often involves both language and cultural adaptation.","The startup's assimilation into the parent company took over a year."]},
+
+{w:"Disposition",tag:"word",e:"A person's <b>inherent character or habitual tendency</b>. Note: in law it can also mean the formal transfer of property.",c:"A person's inherent qualities of mind and character; a habitual tendency",d:["A formal legal transfer of property","A temporary mood caused by external events","A fixed physical posture or stance"],
+ex:["She has a naturally sunny disposition, even under stress.","His disposition toward introversion shaped his preference for one on one talks.","Assessors evaluate disposition alongside skill when scoring candidates."]},
+
+{w:"Inculcate",tag:"word",e:"To <b>instill an idea or habit persistently</b> through repeated instruction.",c:"To instill an idea or habit persistently through repeated instruction",d:["To suddenly discover a hidden truth","To gently persuade someone on one occasion","To remove a harmful belief through therapy"],
+ex:["Parents often inculcate values like honesty from a young age.","The coach inculcated discipline through relentless daily drills.","Years of advertising inculcated brand loyalty before customers could evaluate it critically."]},
+
+{w:"Platitude",tag:"word",e:"A <b>trite, overused remark</b> stated as though it were profound.",c:"A trite, overused remark stated as if profound",d:["A sincere and original compliment","A formal statement of gratitude","A brief moment of silence"],
+ex:["Everything happens for a reason is a platitude, not real comfort.","His speech was full of platitudes and empty of substance.","She grew tired of platitudes and wanted honest feedback instead."]},
+
+{w:"Herald",tag:"word",e:"To <b>signal or announce</b> the approach of something.",c:"To signal or announce the approach of something",d:["To quietly conceal an upcoming event","To formally reject a proposal","To celebrate an event only after it happens"],
+ex:["Dark clouds heralded the coming storm.","The discovery heralded a new era in gene therapy.","Medieval heralds announced the king's proclamations in the town square."]},
+
+{w:"Equivocal",tag:"word",e:"Open to <b>multiple interpretations</b>; deliberately ambiguous.",c:"Open to multiple interpretations; deliberately ambiguous",d:["Completely clear and unambiguous","Equally divided between two options","Morally questionable or dishonest"],
+ex:["His equivocal answer left both sides thinking he agreed with them.","The test results were equivocal, neither confirming nor ruling out the disease.","Politicians often give equivocal statements to avoid commitment."]},
+
+{w:"Ambidextrous",tag:"word",e:"Able to <b>use both hands equally well</b>.",c:"Able to use both hands equally well",d:["Skilled at multitasking under pressure","Capable of switching between two languages fluently","Adaptable to opposing viewpoints"],
+ex:["Being ambidextrous, he could write with either hand.","Ambidextrous batters in baseball can switch sides depending on the pitcher.","Few surgeons are truly ambidextrous in their instrument handling."]},
+
+{w:"Phraseology",tag:"word",e:"The particular <b>choice and arrangement of words</b> characteristic of a person, group, or field.",c:"The particular choice and arrangement of words characteristic of a person, group, or field",d:["The study of sentence grammar","A collection of common idioms","The rhythm and rhyme of poetry"],
+ex:["Legal phraseology can feel deliberately impenetrable to outsiders.","His phraseology shifted noticeably between professors and friends.","Aviation phraseology exists to eliminate ambiguity in radio communication."]},
+
+{w:"Rectitude",tag:"word",e:"<b>Moral integrity</b>; strict adherence to ethical standards.",c:"Moral integrity; adherence to strict ethical standards",d:["Physical correctness of posture","Legal correctness of a contract","Precision in mathematical calculation"],
+ex:["His moral rectitude made him the obvious choice to lead the ethics committee.","She questioned the rectitude of profiting from a client's misfortune.","Rectitude, not popularity, should guide a leader's decisions."]},
+
+{w:"Fratricide",tag:"word",e:"The <b>killing of one's brother or sibling</b>; also used for friendly fire deaths within one's own group.",c:"The killing of one's brother or sibling, or friendly fire within one's own group",d:["The killing of one's father","The killing of a king or ruler","The killing of an entire ethnic group"],
+ex:["Cain's murder of Abel is the biblical archetype of fratricide.","The rival factions' feud amounted to political fratricide within the same movement.","Fratricide during the artillery barrage killed three of their own soldiers."]},
+
+{w:"Posterity",tag:"word",e:"<b>Future generations</b> collectively; one's descendants.",c:"Future generations collectively; descendants",d:["The historical record of past events","One's immediate living relatives","The formal ceremony marking inheritance"],
+ex:["He wrote the memoir for posterity, not for immediate praise.","The monument was built to preserve the soldiers' sacrifice for posterity.","Scientists archive raw data so posterity can re-examine their conclusions."]},
+
+{w:"Prophylactic",tag:"word",e:"Intended to <b>prevent disease or harm before it occurs</b>.",c:"Intended to prevent disease or harm before it occurs",d:["Designed to treat an existing illness","Used to diagnose an unknown condition","Meant to cure a chronic disease permanently"],
+ex:["Doctors prescribed a prophylactic antibiotic before the surgery.","Wearing a helmet is a simple prophylactic measure against head injury.","The prophylactic use of vaccines prevents outbreaks before they start."]},
+
+{w:"Exorbitant",tag:"word",e:"<b>Unreasonably excessive</b>, especially regarding price or demands.",c:"Unreasonably excessive, especially regarding price or demands",d:["Moderately above the average market rate","Fixed and non negotiable","Difficult to obtain due to scarcity"],
+ex:["The landlord demanded an exorbitant deposit for a tiny studio.","Exorbitant interest rates trapped many borrowers in debt.","She refused to pay the exorbitant resale price for concert tickets."]},
+
+{w:"Novel",tag:"word",e:"As an adjective: <b>new and original</b>, not previously seen. (Distinct from the noun meaning a long fictional book.)",c:"New and original; not seen before",d:["Extremely rare and valuable","Complex and difficult to understand","Old fashioned but recently rediscovered"],
+ex:["The researchers proposed a novel method for measuring workplace burnout.","His novel approach to fragrance layering surprised even seasoned collectors.","What once felt novel can quickly become the industry standard."]},
+
+{w:"Culmination",tag:"word",e:"The <b>highest point or final result</b> of a process, reached after gradual development.",c:"The highest point or final result of a process, reached after development",d:["The starting point of a new venture","A sudden interruption of progress","A minor milestone along the way"],
+ex:["Graduation was the culmination of four years of disciplined study.","The negotiations reached their culmination in a signed treaty.","His fitness transformation was the culmination of consistent, unglamorous training."]},
+
+{w:"Invariably",tag:"word",e:"<b>Always</b>; in every single case without exception.",c:"Always; in every case without exception",d:["Usually, but with occasional exceptions","Unpredictably, changing from case to case","Rarely, only under specific conditions"],
+ex:["He invariably orders the same coffee every single morning.","Overconfidence invariably followed access to AI suggestions in his study.","She invariably double checks her sources before citing them."]},
+
+{w:"Ostensibly",tag:"word",e:"<b>Apparently or seemingly</b> so, but perhaps not actually true underneath.",c:"Apparently or seemingly so, but perhaps not actually true",d:["Definitely and verifiably true","Secretly and covertly","According to official documentation"],
+ex:["He was ostensibly there for the funeral, though old rivalries clearly resurfaced.","The meeting was ostensibly about budgets, but really about power.","She ostensibly agreed, though her tone suggested otherwise."]},
+
+{w:"Individuate",tag:"word",e:"To <b>distinguish as a single, distinct individual</b> apart from a group.",c:"To distinguish as a single, distinct individual from a group",d:["To combine several parts into a unified whole","To reduce a group to its lowest common trait","To personally train someone one on one"],
+ex:["Jungian theory centers on individuation, becoming a distinct self apart from the collective.","Twins often struggle to individuate identities within the family system.","The therapy aimed to help him individuate from his parents' expectations."]},
+
+{w:"Adherent",tag:"word",e:"A <b>supporter or follower</b> of an idea, cause, or leader. (Not to be confused with adhesive, the substance that bonds.)",c:"A supporter or follower of a particular idea, cause, or leader",d:["A substance used to bind two surfaces together","An unbiased observer with no stake in the outcome","A temporary ally during a single event"],
+ex:["The party's adherents rallied behind the controversial policy.","As a strict adherent of evidence based practice, she distrusted anecdotes.","Early adherents of the theory faced ridicule before it gained acceptance."]},
+
+{w:"Indiscretion",tag:"word",e:"A <b>minor act of poor judgment</b>, especially one that is socially or morally embarrassing.",c:"A minor act of poor judgment, especially one that is socially or morally embarrassing",d:["A formal complaint filed with authorities","A carefully calculated risk","A permanent character flaw"],
+ex:["His youthful indiscretion at the party became office gossip for weeks.","The senator resigned over a financial indiscretion uncovered by journalists.","One indiscretion doesn't define a person's entire character."]},
+
+{w:"Bodacious",tag:"word",e:"Informal: remarkably <b>bold, impressive, or attractive</b>.",c:"Remarkably bold, impressive, or attractive; audacious in a striking way",d:["Quietly modest and understated","Physically small in stature","Formally dressed for an occasion"],
+ex:["The surfers pulled off a bodacious stunt on the final wave.","Her bodacious confidence turned heads the moment she walked in.","That's a bodacious claim, you're going to need serious evidence for it."]},
+
+{w:"Embossed",tag:"word",e:"Having a design <b>pressed outward, raised</b> from a surface.",c:"Having a raised design pressed into a surface",d:["Having a design carved or cut into a surface","Coated with a shiny protective layer","Printed with ink onto paper"],
+ex:["The invitation featured an embossed gold monogram.","His leather belt had an embossed rhinestone pattern down the front.","The book's cover was embossed with the title in raised lettering."]},
+
+{w:"Etched",tag:"word",e:"Having a design <b>cut or engraved into</b> a surface, often with acid or a sharp tool.",c:"Having a design cut or engraved into a surface, often with acid or a sharp tool",d:["Having a raised design pressed outward","Painted with a thin decorative layer","Sewn together at the seams"],
+ex:["The artist etched fine lines into the copper plate before printing.","His initials were etched into the watch's steel back.","That memory is etched into her mind forever."]},
+
+{w:"Gleek",tag:"word",e:"Archaic: to <b>make a jest</b> or grimace playfully; also the name of a 16th century card game.",c:"An archaic term for a jest or playful grimace",d:["A sudden burst of uncontrollable laughter","A quiet, private conversation between two people","A card game played with three players"],
+ex:["Shakespeare used gleek to mean making a jest at someone's expense.","I will gleek upon occasion, Bottom says in A Midsummer Night's Dream.","Gleek is also the name of a sixteenth century three player card game."]},
+
+{w:"Albeit",tag:"word",e:"<b>Although</b>, introducing a concession within a sentence.",c:"Although; even though",d:["Because of; due to the fact that","In addition to; along with","Instead of; rather than"],
+ex:["He finished the marathon, albeit slower than his personal best.","The plan worked, albeit with a few unexpected complications.","She agreed, albeit reluctantly, to attend the funeral."]},
+
+{w:"Heuristic",tag:"concept",e:"A <b>mental shortcut or rule of thumb</b> enabling quick, imperfect judgments.",c:"A mental shortcut or rule of thumb that enables quick, imperfect judgments",d:["A rigorous formal proof with no exceptions","A random guess with no underlying logic","A statistically validated predictive model"],
+ex:["The availability heuristic makes vivid events feel more common than they are.","Doctors use diagnostic heuristics when time pressure prevents exhaustive testing.","Relying on a single heuristic can produce systematic, predictable errors."]},
+
+{w:"Inconsequential",tag:"word",e:"<b>Unimportant</b>; having no significant effect or consequence.",c:"Unimportant; having no significant effect or consequence",d:["Occurring without any clear cause","Following logically from a prior premise","Unexpected and disruptive"],
+ex:["Whether they ate first or showered first was completely inconsequential.","The typo was inconsequential compared to the report's factual errors.","Most daily decisions are inconsequential in the long run."]},
+
+{w:"Solipsism",tag:"concept",e:"The philosophical view that <b>only one's own mind</b> is certain to exist.",c:"The philosophical view that only one's own mind is certain to exist",d:["The belief that all minds are fundamentally identical","The theory that reality exists independent of observation","Excessive self absorption in social behaviour"],
+ex:["Solipsism argues you can never truly prove another mind exists.","Descartes' method of doubt flirts with solipsism before rebuilding certainty.","His constant self focus felt less like solipsism and more like ordinary narcissism."]},
+
+{w:"Fallacy",tag:"concept",e:"A mistaken belief resulting from <b>flawed reasoning</b>.",c:"A mistaken belief, especially one based on flawed reasoning",d:["A statement that is technically true but misleading","A widely accepted scientific law","An outdated theory replaced by newer evidence"],
+ex:["The sunk cost fallacy keeps people invested in failing projects.","It's a fallacy to assume correlation always implies causation.","His argument collapsed once the central fallacy was exposed."]},
+
+{w:"Misconception",tag:"concept",e:"A <b>false belief</b> based on faulty understanding, not necessarily a flaw in reasoning structure like a fallacy.",c:"A view or opinion that is incorrect because based on faulty understanding",d:["A logical error within a formal argument's structure","A deliberate lie told to mislead others","An outdated scientific theory later disproven"],
+ex:["A common misconception is that we only use ten percent of our brains.","His misconception about the deadline caused him to submit a week late.","Correcting public misconceptions about mental illness takes sustained effort."]},
+
+{w:"Mononym",tag:"word",e:"A <b>single name</b> used to refer to a person, with no surname attached.",c:"A single name used to refer to a person, without a surname or given name",d:["A name shared identically by two different people","A nickname used only among close friends","A title inherited through family lineage"],
+ex:["Beyoncé, Madonna, and Drake all perform under a single mononym.","Plato is known to history by a mononym, not a full birth name.","Adopting a mononym is often a deliberate branding decision."]},
+
+{w:"Enclothed cognition",tag:"concept",e:"The effect where <b>wearing certain clothing changes the wearer's own mindset</b> and behaviour.",c:"The psychological effect where wearing certain clothing changes the wearer's mindset and behaviour",d:["The study of how fashion trends spread through culture","The idea that clothing signals social status to others","The process of learning etiquette through formal dress codes"],
+ex:["Enclothed cognition explains why wearing a lab coat improves attention to detail.","Josh's deliberate style choices may work through enclothed cognition, shaping his own confidence.","Athletes sometimes wear game day gear early, tapping enclothed cognition before kickoff."]},
+
+{w:"Prevaricate",tag:"word",e:"To <b>speak evasively</b> to avoid stating the truth.",c:"To speak evasively or misleadingly in order to avoid the truth",d:["To state something with complete and blunt honesty","To predict a future event with confidence","To repeat an argument to reinforce it"],
+ex:["Under cross examination, the witness began to prevaricate.","Stop prevaricating and just tell me whether you're coming.","Politicians often prevaricate rather than commit to a clear position."]},
+
+{w:"Intersubjectivity",tag:"concept",e:"<b>Shared understanding</b> constructed between two or more minds, distinct from pure objectivity or pure subjectivity.",c:"Shared understanding or meaning constructed between two or more minds",d:["The belief that truth is entirely relative to each individual","Objective facts verifiable independent of any observer","The process of one person imposing their view on another"],
+ex:["Therapists rely on intersubjectivity to build genuine rapport with clients.","Language itself depends on intersubjectivity, shared meaning between speaker and listener.","Their inside joke reflected years of built up intersubjectivity."]},
+
+{w:"Polymathy",tag:"concept",e:"<b>Extensive expertise across many fields</b>, connected rather than merely collected.",c:"Extensive knowledge and expertise across many different fields",d:["Deep specialization within a single narrow discipline","The rapid ability to learn any new skill","A formal academic degree spanning two subjects"],
+ex:["Da Vinci's polymathy spanned anatomy, engineering, and painting.","True polymathy requires connecting insights across disciplines, not just collecting facts.","Josh's cross domain ambitions across AI, psychology, and business reflect a drive toward polymathy."]},
+
+{w:"Equanimity",tag:"word",e:"<b>Mental calmness and composure</b>, especially under stress.",c:"Mental calmness and composure, especially under stress or pressure",d:["Complete emotional numbness or detachment","Overconfidence bordering on arrogance","Sudden relief after a stressful event"],
+ex:["She received the rejection with equanimity and moved on within the hour.","Stoic philosophy trains practitioners to face misfortune with equanimity.","His equanimity under pressure made him a natural crisis manager."]},
+
+{w:"Panpsychism",tag:"concept",e:"The view that <b>consciousness is a basic feature of all matter</b>, not unique to brains.",c:"The view that consciousness is a fundamental feature present in all matter",d:["The belief that only humans possess genuine consciousness","The theory that the mind is purely a product of brain activity","The idea that all events are predetermined by prior causes"],
+ex:["Panpsychism suggests even a single electron has some rudimentary form of experience.","Some philosophers turn to panpsychism to solve the hard problem of consciousness.","Panpsychism remains a minority but serious position in philosophy of mind."]},
+
+{w:"Dualism",tag:"concept",e:"The view that <b>mind and body are two fundamentally distinct substances</b>.",c:"The view that mind and body are two fundamentally distinct kinds of substance",d:["The belief that everything reduces to physical processes","The theory that reality consists of a single unified substance","The idea that two opposing forces balance the universe"],
+ex:["Descartes' dualism split existence into thinking mind and extended body.","Critics of dualism ask how an immaterial mind could interact with a physical brain.","Popular belief in an afterlife often implicitly assumes some form of dualism."]},
+
+{w:"Reductionism",tag:"concept",e:"Explaining a complex system by <b>breaking it into its simplest component parts</b>.",c:"The approach of explaining a complex system by breaking it into its simplest component parts",d:["The practice of simplifying an argument to make it more persuasive","The theory that complex systems can never be understood","The process of testing a hypothesis through controlled experiments"],
+ex:["Neuroscientific reductionism explains emotion purely through neurotransmitter activity.","Critics argue reductionism misses emergent properties that only appear at the whole system level.","Reducing a person's behaviour to genetics alone is a reductionist move."]},
+
+{w:"Reductive",tag:"word",e:"<b>Oversimplifying</b> a complex issue by ignoring important nuance. The pejorative sibling of reductionism.",c:"Oversimplifying a complex issue by ignoring important nuance",d:["Thoroughly comprehensive, covering every relevant detail","Methodically organized into clear categories","Based on rigorous experimental evidence"],
+ex:["Calling him just lazy is a reductive explanation for burnout.","The article's reductive take on the study ignored its key caveats.","It's reductive to blame one variable for a multi causal outcome."]},
+
+{w:"Agnostic (theism)",tag:"concept",e:"Holding that God's existence is <b>unknown or unknowable</b>, without asserting belief or disbelief. Distinct from atheism, which is a claim about belief, not knowledge.",c:"Holding that the existence of God is unknown or unknowable, without asserting belief or disbelief",d:["Actively denying the existence of any deity","Believing in God without requiring proof","Practicing multiple religions simultaneously"],
+ex:["She's agnostic on the question, she simply says we can't know for certain.","Agnostic differs from atheist in making a claim about knowledge, not belief.","He was raised religious but became agnostic after years of philosophical doubt."]},
+
+{w:"Convex",tag:"word",e:"Curving <b>outward</b>, like the exterior of a sphere.",c:"Curving outward, like the exterior of a sphere",d:["Curving inward, like the interior of a bowl","Perfectly flat with no curvature","Curving in an irregular, unpredictable pattern"],
+ex:["A magnifying glass uses a convex lens to bend light inward.","The car's convex side mirror widens the field of view.","Convex lenses converge light rays to a single focal point."]},
+
+{w:"Concave",tag:"word",e:"Curving <b>inward</b>, like the interior of a bowl.",c:"Curving inward, like the interior of a bowl",d:["Curving outward, like the exterior of a sphere","Bulging symmetrically on both sides","Having sharp angular edges"],
+ex:["Satellite dishes use a concave shape to collect and focus signals.","The concave mirror in the makeup compact magnifies your reflection.","Concave lenses spread light rays apart rather than converging them."]},
+
+{w:"Smug",tag:"word",e:"<b>Excessively self satisfied</b>, showing quiet superiority.",c:"Excessively self satisfied, showing a superior attitude toward others",d:["Genuinely humble despite significant achievement","Anxious about being judged by others","Openly boastful and loud about success"],
+ex:["He wore a smug grin after predicting the outcome correctly.","Her smug tone made the compliment feel like an insult.","Nothing is more grating than a smug know it all in a group project."]},
+
+{w:"Retrospectively",tag:"word",e:"<b>Looking back</b> on past events from the present.",c:"Looking back on past events, from the vantage point of the present",d:["Looking ahead to anticipate future outcomes","Occurring simultaneously with the event itself","Happening in a fixed, unchanging sequence"],
+ex:["Retrospectively, ignoring her early messages seems like an obvious mistake.","The study was analyzed retrospectively, using data collected years earlier.","Retrospectively applying new safety standards to old buildings can be costly."]},
+
+{w:"Hindsight",tag:"word",e:"Understanding a situation <b>only possible after</b> it has already occurred.",c:"Understanding of a situation only possible after it has already occurred",d:["The ability to accurately predict future events","A vague, incomplete memory of a past event","Insight gained through careful present moment observation"],
+ex:["Hindsight bias makes past events feel more predictable than they actually were.","In hindsight, he should have followed up with Nadine sooner.","Hindsight is twenty twenty, but it doesn't help you in the moment."]},
+
+{w:"Inertia",tag:"word",e:"<b>Resistance to change</b> in motion or state, physical or behavioural.",c:"Resistance to change in motion or state, whether physical or behavioural",d:["A sudden surge of motivation to act","The rate at which an object accelerates","A temporary pause before resuming action"],
+ex:["Newton's first law describes inertia as an object's resistance to changing velocity.","Social inertia kept the outdated policy in place long after it stopped working.","Breaking out of scrolling inertia takes deliberate, effortful action."]},
+
+{w:"Proxemics",tag:"concept",e:"The study of how <b>physical distance</b> between people communicates social meaning.",c:"The study of how physical distance between people communicates social meaning",d:["The study of hand gestures across cultures","The study of vocal tone and pitch in speech","The study of eye contact patterns in conversation"],
+ex:["Proxemics explains why standing too close to a stranger feels invasive.","Cultural norms in proxemics vary widely, some cultures stand much closer than others.","Understanding proxemics helped him read the funeral encounter's unspoken signals."]},
+
+{w:"Monolithic",tag:"word",e:"<b>Large, uniform, and indivisible</b>; treated as one undifferentiated whole.",c:"Large, uniform, and indivisible; treated as a single undifferentiated whole",d:["Fragmented into many small, competing parts","Ancient and no longer relevant","Built from a mix of different materials"],
+ex:["Treating Gen Z as a monolithic group ignores its internal diversity.","The monolithic tech company controlled every stage of production in house.","Ancient monolithic structures like Stonehenge were carved from single massive stones."]},
+
+{w:"Privy",tag:"word",e:"Having <b>private, often confidential, knowledge</b> of something.",c:"Having private knowledge of something, typically secret or confidential",d:["Openly informed through public announcement","Legally entitled to a share of property","Formally invited to attend an event"],
+ex:["Only the executive team was privy to the merger talks.","She wasn't privy to the reasons behind his sudden resignation.","Being privy to insider information comes with legal responsibility."]},
+
+{w:"Nuance",tag:"word",e:"A <b>subtle difference</b> or shade of meaning, tone, or expression.",c:"A subtle difference or shade of meaning, tone, or expression",d:["A major, obvious distinction between two ideas","An exception explicitly stated within an argument","A grammatical error in word choice"],
+ex:["The translator struggled to capture the nuance of the original poem.","Understanding social nuance helps you read what someone really means.","The two words seem synonymous, but there's a real nuance between them."]},
+
+{w:"Caveat",tag:"word",e:"A <b>warning or qualification</b> that limits the scope of a statement.",c:"A warning or qualification that limits the scope of a statement",d:["A subtle difference in meaning between similar terms","A formal legal contract between two parties","A confident assertion with no exceptions"],
+ex:["I'll help, with the caveat that I can't guarantee the deadline.","The report's conclusion came with several important caveats.","Every diet plan should carry the caveat that individual results vary."]},
+
+{w:"Baron",tag:"word",e:"A low ranking hereditary nobleman, or figuratively a <b>powerful figure dominating an industry</b>.",c:"A member of the nobility holding the lowest hereditary title, or a powerful dominant figure in an industry",d:["A wealthy self made entrepreneur with no formal title","A military officer commanding a regiment","An elected local government official"],
+ex:["The oil baron controlled nearly every refinery in the region.","He was granted the title of baron for his service to the crown.","Media barons wield outsized influence over public opinion."]},
+
+{w:"Merfolk",tag:"word",e:"Mythical human-like sea beings, <b>collectively covering mermaids and mermen</b>.",c:"Mythical human like beings who live in the sea, collectively including both mermaids and mermen",d:["Sailors who have spent their entire lives at sea","A folk music genre inspired by maritime life","Coastal communities dependent on fishing"],
+ex:["Ancient sailors sometimes claimed to have spotted merfolk near the rocks.","The film reimagined merfolk mythology through a modern lens.","Merfolk appear across many cultures, from Greek sirens to West African water spirits."]},
+
+{w:"Tetration",tag:"concept",e:"The hyperoperation after exponentiation: <b>repeated exponentiation</b> of a number by itself.",c:"The next hyperoperation after exponentiation, repeated exponentiation of a number by itself",d:["Repeated multiplication of a number by itself","Repeated addition of a number to itself","The operation one level above tetration"],
+ex:["Tetration of two to the third power means two raised to the power of two raised to the power of two.","Numbers grow so explosively under tetration they quickly exceed the observable universe's atom count.","Pentation is to tetration what tetration is to exponentiation, one level further up the chain."]},
+
+{w:"Centripetal",tag:"word",e:"Directed <b>toward the center</b> of rotation.",c:"Directed or moving toward the center of rotation",d:["Directed or moving away from the center","Rotating at a constant, unchanging speed","Balanced equally between two opposing forces"],
+ex:["Centripetal force keeps a satellite curving toward Earth instead of flying off in a straight line.","Spinning a bucket of water relies on centripetal force to keep the water inside.","Sociologists use centripetal to describe forces that pull a society toward shared identity."]},
+
+{w:"Sensibility",tag:"word",e:"Refined <b>awareness of and responsiveness to emotional or aesthetic experience</b>. Not the same as common sense.",c:"Refined awareness of and responsiveness to emotional or aesthetic experience; a way of feeling and judging",d:["Practical, level headed common sense","The physical ability to detect sensory stimuli","Strict adherence to logical reasoning"],
+ex:["Austen contrasts Marianne's raw sensibility with Elinor's measured sense.","His artistic sensibility drew him toward minimalist design over ornate detail.","A refined fragrance sensibility means noticing notes most people miss entirely."]},
+
+{w:"Macroscopic",tag:"word",e:"Large enough to be <b>visible to the naked eye</b>; concerning large scale systems.",c:"Large enough to be visible to the naked eye; concerning large scale systems rather than minute detail",d:["Visible only through a microscope","Concerned with a single isolated case","Occurring instantaneously without measurable duration"],
+ex:["Thermodynamics describes macroscopic properties like temperature and pressure.","Zoom out from individual behaviour and macroscopic social patterns emerge.","The tumor was large enough to be macroscopic, visible without any imaging."]},
+
+{w:"White collar",tag:"concept",e:"Relating to <b>professional or clerical work</b> typically done in an office.",c:"Relating to professional, managerial, or clerical work typically done in an office",d:["Relating to physical, manual labor typically done outdoors or in a factory","Relating to unpaid volunteer or charity work","Relating to freelance or self employed work"],
+ex:["White collar crime often involves fraud rather than physical violence.","He traded a blue collar upbringing for a white collar consulting career.","White collar workers were far more likely to shift to remote work."]},
+
+{w:"Blue collar",tag:"concept",e:"Relating to <b>manual or industrial labor</b>, named for work clothing that hides dirt and grime.",c:"Relating to manual or industrial labor, historically associated with sturdy work clothing that hides dirt",d:["Relating to office based professional or managerial work","Relating to government or civil service employment","Relating to seasonal or temporary contract work"],
+ex:["Blue collar workers built the very factories that white collar executives managed.","His blue collar work ethic carried over into his academic discipline.","The town's economy depended heavily on blue collar manufacturing jobs."]},
+
+{w:"Iridescent",tag:"word",e:"Displaying <b>shifting rainbow colors</b> that change with viewing angle.",c:"Displaying shifting rainbow like colors that change depending on viewing angle",d:["Extremely bright and reflective like a mirror","Uniformly one solid, deep color","Glowing faintly in the dark"],
+ex:["The beetle's iridescent shell shifted from green to purple in the sunlight.","Soap bubbles appear iridescent because of thin film light interference.","Her iridescent eyeshadow caught the light every time she turned her head."]},
+
+{w:"Lapel",tag:"word",e:"The <b>folded flap</b> on the front of a jacket, extending from the collar.",c:"The folded flap on the front of a jacket or coat, extending from the collar",d:["The interior lining sewn inside a jacket","The cuff at the end of a sleeve","The seam running down a jacket's back"],
+ex:["He pinned a small boutonnière to his lapel before the ceremony.","Wide lapels came back into fashion after decades of slim cuts.","She noticed the fine stitching along his bomber jacket's lapel."]},
+
+{w:"Gallows",tag:"word",e:"A wooden structure used for <b>hanging condemned people</b>.",c:"A wooden structure used for hanging condemned people",d:["A raised platform used for public speeches","A cage used to publicly display prisoners","A ceremonial arch marking a town's entrance"],
+ex:["The condemned man was led to the gallows at dawn.","Gallows humor refers to joking about grim or fatal situations.","The old gallows still stands as a grim historical landmark."]},
+
+{w:"Vestigial vs Vestige",tag:"pair",e:"<b>Vestige</b> is the noun for a remaining trace of something that once existed fully. <b>Vestigial</b> is the adjective describing something reduced to such a trace.",c:"Vestige is the noun for a remaining trace of something; vestigial is the adjective describing something reduced to that trace",d:["Vestige means an early prototype and vestigial means fully developed","Vestige is the adjective and vestigial is the noun","Both words mean identical things with no grammatical difference"],
+ex:["The appendix is often called a vestigial organ, a functional trace of an ancestral digestive structure.","Only a vestige of the old empire's influence remains in the region's legal system.","Whale hip bones are vestigial, remnants of legs their land dwelling ancestors once used."]},
+
+{w:"Asocial vs Antisocial",tag:"pair",e:"<b>Asocial</b> means avoiding social interaction without hostility. <b>Antisocial</b> means actively hostile toward or violating social norms.",c:"Asocial means avoiding social interaction without hostility; antisocial means actively hostile toward or violating social norms",d:["Asocial means hostile toward others and antisocial means simply shy","Both terms describe identical clinical presentations","Asocial refers to criminal behaviour and antisocial to introversion"],
+ex:["He's asocial rather than antisocial, he just prefers solitude to hostility.","Antisocial personality disorder involves a disregard for others' rights, not mere shyness.","Being asocial at a party means avoiding the crowd, not sabotaging it."]},
+
+{w:"Anti-intellectualism",tag:"concept",e:"A cultural or political <b>distrust and rejection of intellectuals and rigorous thought</b>.",c:"A cultural or political distrust and rejection of intellectuals, expertise, and rigorous thought",d:["A preference for practical skills over abstract theory","A formal academic critique of a specific theory","The rejection of a single flawed intellectual argument"],
+ex:["Anti-intellectualism often surfaces as suspicion toward scientists and experts during crises.","Populist movements sometimes weaponize anti-intellectualism to discredit critics.","Mocking someone for using big words is a small, everyday form of anti-intellectualism."]},
+
+{w:"Double jeopardy",tag:"concept",e:"A legal principle prohibiting someone from being <b>tried twice for the same crime</b>.",c:"A legal principle prohibiting a person from being tried twice for the same crime",d:["A legal principle allowing appeals in only exceptional circumstances","A rule permitting evidence to be reused across separate trials","A sentencing rule doubling punishment for repeat offenders"],
+ex:["Double jeopardy protects an acquitted defendant from being retried for the same offense.","The case was dismissed on double jeopardy grounds after a prior verdict.","Double jeopardy doesn't apply if new evidence reveals an entirely separate crime."]},
+
+{w:"Igneous",tag:"word",e:"Rock formed from the <b>cooling and solidification of magma or lava</b>.",c:"Rock formed from the cooling and solidification of molten magma or lava",d:["Rock formed from compressed layers of sediment over time","Rock transformed by intense heat and pressure underground","Rock dissolved and reshaped by flowing water"],
+ex:["Granite is a common igneous rock formed deep underground.","Basalt, an igneous rock, forms when lava cools rapidly at the surface.","Volcanic eruptions are a primary source of new igneous rock."]},
+
+{w:"Biome",tag:"word",e:"A large naturally occurring community of <b>plants and animals adapted to a specific climate</b>.",c:"A large naturally occurring community of plants and animals adapted to a specific climate and region",d:["A single species' entire population across the globe","The full range of microorganisms living in the human gut","A protected nature reserve managed by a government"],
+ex:["The Amazon rainforest is one of the most biodiverse biomes on Earth.","Deserts, tundras, and grasslands are each distinct biomes.","Climate change is shifting the boundaries of biomes worldwide."]},
+
+{w:"Canopy",tag:"word",e:"The <b>uppermost, dense layer of branches and leaves</b> formed by a forest's tallest trees.",c:"The uppermost, dense layer of branches and leaves formed by a forest's tallest trees",d:["The forest's underground network of interconnected roots","The layer of decomposing leaves covering the forest floor","A single tall emergent tree rising above the rest"],
+ex:["Sunlight barely reaches the ground beneath a dense rainforest canopy.","Researchers built walkways high in the canopy to study rare bird species.","The canopy layer hosts the majority of a rainforest's biodiversity."]}
+];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+let order = shuffle(DATA.map((_,i)=>i));
+let idx = 0;
+let score = 0;
+let missed = [];
+
+const quizArea = document.getElementById('quizArea');
+const fill = document.getElementById('fill');
+const progressLabel = document.getElementById('progressLabel');
+const scoreLabel = document.getElementById('scoreLabel');
+const resetBtn = document.getElementById('resetBtn');
+
+function resetAll(){
+  order = shuffle(DATA.map((_,i)=>i));
+  idx = 0;
+  score = 0;
+  missed = [];
+  render();
+}
+resetBtn.onclick = resetAll;
+
+function render(){
+  if(idx >= order.length){ renderDone(); return; }
+  const item = DATA[order[idx]];
+  const opts = shuffle([item.c, ...item.d]);
+
+  progressLabel.textContent = `Card ${idx+1} / ${order.length}`;
+  scoreLabel.textContent = `Score ${score}`;
+  fill.style.width = `${(idx/order.length)*100}%`;
+
+  quizArea.innerHTML = `
+    <div class="card" data-tag="${item.tag}">
+      <div class="word">${item.w}</div>
+      <div class="prompt">Which definition matches, precisely?</div>
+      <div id="opts"></div>
+      <div id="feedbackSlot"></div>
+    </div>
+  `;
+
+  const optsDiv = document.getElementById('opts');
+  opts.forEach(optText => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = optText;
+    btn.onclick = () => answer(optText, item, optsDiv);
+    optsDiv.appendChild(btn);
+  });
+}
+
+function answer(chosen, item, optsDiv){
+  const buttons = Array.from(optsDiv.querySelectorAll('.opt'));
+  const isRight = chosen === item.c;
+
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === item.c) b.classList.add('correct');
+    else if(b.textContent === chosen) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+
+  if(isRight) score++;
+  else missed.push(item.w);
+  scoreLabel.textContent = `Score ${score}`;
+
+  const slot = document.getElementById('feedbackSlot');
+  const exHtml = item.ex.map(s => `<li>${s}</li>`).join('');
+  slot.innerHTML = `
+    <div class="feedback ${isRight ? 'right' : 'wrong'}">
+      <span class="tag">${isRight ? 'Correct — locked in' : 'Not quite — here is the nuance'}</span>
+      <p class="def">${item.e}</p>
+      <ul class="examples">${exHtml}</ul>
+    </div>
+    <button class="next" id="nextBtn">Next card →</button>
+  `;
+  document.getElementById('nextBtn').onclick = () => { idx++; render(); };
+}
+
+function renderDone(){
+  fill.style.width = `100%`;
+  progressLabel.textContent = `Card ${order.length} / ${order.length}`;
+  const pct = Math.round((score/order.length)*100);
+  const missedHtml = missed.length
+    ? `<div class="missedlist"><b>Re-drill these:</b><br>${missed.map(m=>`<span>${m}</span>`).join(' · ')}</div>`
+    : `<div class="missedlist">Clean sweep. Every nuance landed.</div>`;
+  quizArea.innerHTML = `
+    <div class="card done" data-tag="result">
+      <div class="big">${score} / ${order.length}</div>
+      <p>${pct}% precision across the full lexicon set.</p>
+      <button class="restart" id="restartBtn">Reshuffle & retry</button>
+      ${missedHtml}
+    </div>
+  `;
+  document.getElementById('restartBtn').onclick = resetAll;
+}
+
+// ================= GLOBAL CONFIGURATION & ACCENT CONTROLLER =================
+const DEFAULT_BG = 'linear-gradient(135deg, #1e1b4b, #0f0c29)';
+const DEFAULT_THEME = 'cosmic';
+
+let bgSetting = localStorage.getItem('lexicon_centre_bg') || DEFAULT_BG;
+let themeSetting = localStorage.getItem('lexicon_centre_theme') || DEFAULT_THEME;
+
+// Apply initial base background instantly on mount
+document.getElementById('bg-base').style.background = bgSetting;
+
+function applyBackgroundTransition(gradientCSS) {
+  const base = document.getElementById('bg-base');
+  const transitionLayer = document.getElementById('bg-transition');
+  
+  if (base.style.background === gradientCSS) return;
+  
+  transitionLayer.style.background = gradientCSS;
+  transitionLayer.style.opacity = '1';
+  
+  setTimeout(() => {
+    base.style.background = gradientCSS;
+    transitionLayer.style.opacity = '0';
+  }, 800);
+}
+
+function setThemeInline(themeName) {
+  document.documentElement.className = `theme-${themeName}`;
+}
+
+function updateSettings(type, value) {
+  if (type === 'theme') {
+    themeSetting = value;
+    localStorage.setItem('lexicon_centre_theme', value);
+    setThemeInline(value);
+  }
+  if (type === 'bg') {
+    bgSetting = value;
+    localStorage.setItem('lexicon_centre_bg', value);
+    applyBackgroundTransition(value);
+  }
+  if (type === 'blobs') {
+    toggleBlobs(value);
+  }
+  syncSettingsUI();
+}
+
+function syncSettingsUI() {
+  const sel = document.getElementById('bgSelect');
+  if (sel) sel.value = bgSetting;
+
+  const blobEnabled = localStorage.getItem('lexicon_blobs') !== 'off';
+  const switchEl = document.getElementById('blob-switch');
+  if (switchEl) switchEl.checked = blobEnabled;
+
+  const picker = document.getElementById('palette-picker');
+  if (picker) {
+    picker.querySelectorAll('.palette-option').forEach(btn => {
+      const isTarget = btn.classList.contains(`theme-${themeSetting}`);
+      btn.classList.toggle('active', isTarget);
+    });
+  }
+}
+
+function toggleBlobs(enabled) {
+  document.querySelectorAll('.blob').forEach(b => {
+    b.style.opacity = enabled ? '0.22' : '0';
+  });
+  localStorage.setItem('lexicon_blobs', enabled ? 'on' : 'off');
+  const switchEl = document.getElementById('blob-switch');
+  if (switchEl) switchEl.checked = enabled;
+}
+
+// Initialize Custom Presentation Settings on launch
+setThemeInline(themeSetting);
+const savedBlobs = localStorage.getItem('lexicon_blobs') || 'on';
+toggleBlobs(savedBlobs === 'on');
+syncSettingsUI();
+
+render();
+</script>
+</body>
+</html>
